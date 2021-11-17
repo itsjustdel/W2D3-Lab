@@ -10,6 +10,7 @@ class TestPub(unittest.TestCase):
     def setUp(self):
         self.pub = Pub("The Prancing Pony", 100.00)
         self.drink1 = Drink("Beer", 5.00, 5)
+        self.drink2 = Drink("Wine", 6.50, 12)
         self.customer1 = Customer("Jimmy", 100.00, 70)
         self.customer2 = Customer("Calum", 10, 16)
         self.customer3 = Customer("Adam", 0, 23)
@@ -30,9 +31,12 @@ class TestPub(unittest.TestCase):
     def test_add_drink(self):        
         # Act
         self.pub.add_drink(self.drink1, 50)
+        self.pub.add_drink(self.drink1, 100)
+
         # Assert
         self.assertEqual(1, len(self.pub.drinks))
-        self.assertEqual(50, self.pub.drinks[self.drink1] )
+        self.assertEqual(150, self.pub.drinks[self.drink1] )
+
 
     def test_check_age(self):
         self.assertEqual(self.pub.check_age(self.customer1), True)
@@ -73,3 +77,7 @@ class TestPub(unittest.TestCase):
     def test_stock_value(self):
         self.pub.add_drink(self.drink1, 50)
         self.assertEqual(250, self.pub.stock_value())
+        # add another type of drink
+        self.pub.add_drink(self.drink2, 30)
+        # check stock_value adds all different types of drinks
+        self.assertEqual(445, self.pub.stock_value())
