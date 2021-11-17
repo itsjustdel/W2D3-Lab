@@ -21,13 +21,15 @@ class Pub:
     
     def sell_drink(self, customer, drink):
         # check customer at least 18
-        if self.check_age(customer) and customer.wallet >= drink.price and customer.drunkenness < self.max_drunkenness:
+        if self.check_age(customer) and (customer.wallet >= drink.price) and (customer.drunkenness < self.max_drunkenness) and (self.drinks[drink] >= 1):
             # reduce money from customer
             customer.reduce_wallet(drink.price)         
             # add money to pub's till
             self.increase_till(drink.price)
-
+            # increase customer drunkenness
             customer.drunkenness += drink.alcohol_level
+            # reduce stock by 1
+            self.drinks[drink] -= 1
             return True
         else:
             return False
