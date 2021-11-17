@@ -1,7 +1,9 @@
 import unittest
-from src.customer import Customer
 from src.pub import Pub
+
+from src.customer import Customer
 from src.drink import Drink
+from src.food import Food
 
 class TestPub(unittest.TestCase):
     
@@ -11,6 +13,7 @@ class TestPub(unittest.TestCase):
         self.customer1 = Customer("Jimmy", 100.00, 70)
         self.customer2 = Customer("Calum", 10, 16)
         self.customer3 = Customer("Adam", 0, 23)
+        self.food1 = Food("Pizza", 8.00, 7)
 
     def test_pub_has_name(self):
         self.assertEqual("The Prancing Pony", self.pub.name)
@@ -26,9 +29,10 @@ class TestPub(unittest.TestCase):
 
     def test_add_drink(self):        
         # Act
-        self.pub.add_drink(self.drink1)
+        self.pub.add_drink(self.drink1, 50)
         # Assert
         self.assertEqual(1, len(self.pub.drinks))
+        self.assertEqual(50, self.pub.drinks[self.drink1] )
 
     def test_check_age(self):
         self.assertEqual(self.pub.check_age(self.customer1), True)
@@ -52,3 +56,20 @@ class TestPub(unittest.TestCase):
         for i in range(4):
             self.pub.sell_drink(self.customer1, self.drink1)
         self.assertEqual(False, self.pub.sell_drink(self.customer1, self.drink1))
+
+    def test_sell_food(self):
+        self.assertEqual(False, self.pub.sell_food(self.customer3, self.food1))
+        # get someone drunk twice!
+        self.pub.sell_drink(self.customer1, self.drink1)
+        self.pub.sell_drink(self.customer1, self.drink1)
+        self.pub.sell_food(self.customer1, self.food1)
+
+        self.assertEqual(3, self.customer1.drunkenness)
+
+        # check drunkenness does not go negative
+        self.pub.sell_food(self.customer2, self.food1)
+        self.assertEqual(0, self.customer2.drunkenness)
+
+    def test_stock_value(self):
+        self.pub.add_drink(self.drink1, 50)
+        self.assertEqual(250, self.pub.stock_value())
